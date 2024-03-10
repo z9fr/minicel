@@ -64,12 +64,25 @@ impl Table {
     pub fn parse(file_content: &str, file_name: &str) {
         let mut table = Table::new(0, 0, String::from(file_name));
 
-        for (index, row) in file_content.split("\n").enumerate() {
+        for (index, row) in file_content.trim().split("\n").enumerate() {
             let row_index = index;
-            for (col_index, col) in row.split("|").enumerate() {
+            for (col_index, col) in row.trim().split("|").enumerate() {
                 let trimmed_col = col.trim();
 
-                let cell = Cell::new(row_index, col_index, trimmed_col.to_string());
+                let expr_type: ExprKind = match trimmed_col.parse::<usize>() {
+                    Ok(_) => ExprKind::CellKindNumber,
+                    Err(_) => {
+                        if trimmed_col.starts_with("=") {
+                            ExprKind::CellKindExpr
+                        } else if trimmed_col.starts_with(":") {
+                            ExprKind::CellKindClone
+                        } else {
+                            ExprKind::CellKindText
+                        }
+                    }
+                };
+
+                let cell = Cell::new(row_index, col_index, trimmed_col.to_string(), expr_type);
                 table.add_cell(cell);
             }
         }
