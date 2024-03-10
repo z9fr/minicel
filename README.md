@@ -19,3 +19,7 @@ A      | B
 ```
 
 Basically a simple Excel engine without any UI.
+
+---
+
+Based on the assignment from ts-coding stream, FYI: [https://github.com/tsoding/minicel](https://github.com/tsoding/minicel)
